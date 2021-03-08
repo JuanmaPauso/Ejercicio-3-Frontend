@@ -1,22 +1,351 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <title>Calculadora</title>
   <meta charset="utf-8">
+<!-- Estilos para diferenciar los botones -->
+  <style type="text/css">
+
+    button {
+      height: 30px;
+      width: 10%;
+      font-weight: 900;
+      border-radius: 10px;
+      color: white;
+      border-style: none;
+    }
+    #cuadrado, #modulo, #factorial{
+      background-color: maroon;
+    }
+    #sumatorio, #ordenar, #revertir, #quitar {
+      background-color: tomato;
+    }
+
+    #suma, #multiplicacion, #igual {
+      background-color: turquoise;
+    }
+
+    input {
+      background-color: lightskyblue;
+      border-radius: 10px;
+      border-style: none;
+      height: 30px;
+      width: 100%;
+    }
+
+  </style>
+
   <script type="text/javascript">
+  //variables para realizar las diferentes operaciones
+    let operador;
+    let numero1 = 0;
+    let numero2 = 0;
+    let contador;
+    let mensajeError;
+    let comprobar;
+
+
     const vaciar = () => {
       document.getElementById("pantalla").value = "";
     }
 
     const cuadrado = () => {
       let num = document.getElementById("pantalla");
-      num.value = num.value * num.value;
+      comprobar = num.value;
+
+      validar(comprobar, "noCSV");
+
+      if (mensajeError !== "Error") {
+
+        num.value = num.value * num.value;
+        rellenar_info();
+        mensajeError = "";
+
+      } else {
+        num.value = mensajeError;
+        mensajeError = "";
+      }
+
+    }
+
+
+    const rellenar_info = () => {
+      let info = document.getElementById("info");
+      let num = document.getElementById("pantalla");
+      if (num.value < 100) {
+        info.innerHTML = "Info: El resultado es menor que 100"
+      } else if (num.value > 100 && num.value < 200) {
+        info.innerHTML = "Info: El resultado está entre 100 y 200"
+      } else if (num.value > 200) {
+        info.innerHTML = "Info: El resultado es superior a 200"
+      }
+    }
+
+
+    //opción para poner el número en negativo, en la repuesta me da como error al pasar moocauto
+   
+    /*  
+    const mod = () => {
+      let num = document.getElementById("pantalla");
+      comprobar = num.value;
+
+      validar(comprobar, "noCSV");
+
+      if (mensajeError !== "Error") {
+          let signo = Math.sign(num.value);
+          let modulo = num.value * num.value;
+          let resultado = Math.sqrt(modulo);
+          if (signo === -1){
+            num.value = -resultado;
+          } else {
+            num.value = resultado;
+          }
+          rellenar_info();
+          mensajeError = "";
+        } else {
+        num.value = mensajeError;
+        mensajeError = "";
+      }
+
+    }
+    */
+
+
+    const mod = () => {
+      let num = document.getElementById("pantalla");
+      comprobar = num.value;
+
+      validar(comprobar, "noCSV");
+
+      if (mensajeError !== "Error") {
+          let modulo = num.value * num.value;
+          let resultado = Math.sqrt(modulo);
+          num.value = resultado;
+          rellenar_info();
+          mensajeError = "";
+        } else {
+        num.value = mensajeError;
+        mensajeError = "";
+      }
+
+    }
+
+    const fact = () => {
+
+      //Factorial = X*(X-1)*(X-2)*…*3*2*1
+      var num = document.getElementById("pantalla");
+      comprobar = num.value;
+
+      validar(comprobar, "noCSV");
+
+      if (mensajeError !== "Error") {
+        let factorial = 1;
+        for (i = num.value; i > 0; i--) {
+          factorial *= i;
+        }
+        num.value = factorial;
+        rellenar_info();
+        mensajeError = "";
+
+      } else {
+        num.value = mensajeError;
+        mensajeError = "";
+      }
+
+
+
+    }
+
+    const mul = () => {
+      let num = document.getElementById("pantalla");
+      comprobar = num.value;
+
+
+      validar(comprobar, "noCSV");
+
+      if (mensajeError !== "Error") {
+
+        numero1 = num.value;
+        numero1 = parseInt(numero1);
+        operador = "multiplicar";
+        contador = 1;
+        vaciar();
+        mensajeError = "";
+
+      } else {
+        num.value = mensajeError;
+        mensajeError = "";
+      }
+
+    }
+
+    const add = () => {
+      let num = document.getElementById("pantalla");
+      comprobar = num.value;
+
+
+      validar(comprobar, "noCSV");
+
+      if (mensajeError !== "Error") {
+
+        numero1 = num.value;
+        numero1 = parseInt(numero1);
+        operador = "sumar";
+        contador = 1;
+        vaciar();
+        mensajeError = "";
+
+      } else {
+        num.value = mensajeError;
+        mensajeError = "";
+      }
+
+    }
+
+    const eq = () => {
+      let num = document.getElementById("pantalla");
+      comprobar = num.value;
+      validar(comprobar, "noCSV");
+
+      if (mensajeError !== "Error") {
+
+        if (contador > 1) {
+          num.value = num.value
+        } else if (operador === "multiplicar") {
+          num.value *= numero1;
+          contador++
+        } else if (operador === "sumar") {
+          numero2 = num.value;
+          numero2 = parseInt(numero2);
+          num.value = numero1 + numero2;
+          contador++
+          rellenar_info();
+          mensajeError = "";
+        }
+
+
+      } else {
+        num.value = mensajeError;
+        mensajeError = "";
+      }
+
+
+    }
+
+    const sumatorio = () => {
+      let num = document.getElementById("pantalla");
+      let list = num.value.split(",");
+      comprobar = list;
+      validar(comprobar, "CSV")
+
+      if (mensajeError !== "Error") {
+        let i = 0,
+          acc = 0;
+        while (i < list.length) {
+          acc += +list[i++];
+          num.value = acc;
+        }
+
+      } else {
+        num.value = mensajeError;
+        mensajeError = "";
+      }
+
+
+    }
+
+    const sortEggsInNest = (a, b) => {
+      if (a > b) {
+        return 1;
+      } else if (b > a) {
+        return -1;
+      } else {
+        return 0;
+      }
+    }
+
+    const ordenar = () => {
+      let num = document.getElementById("pantalla");
+      let list = num.value.split(",");
+      comprobar = list;
+      validar(comprobar, "CSV");
+      if (mensajeError !== "Error") {
+        num.value = list.sort(sortEggsInNest);
+      } else {
+        num.value = mensajeError;
+        mensajeError = "";
+      }
+    
+    }
+
+    const revertir = () => {
+      let num = document.getElementById("pantalla");
+      let list = num.value.split(",");
+      comprobar = list;
+      validar(comprobar, "CSV")
+      if (mensajeError !== "Error") {
+        num.value = list.reverse();
+      } else {
+        num.value = mensajeError;
+        mensajeError = "";
+      }
+    
+    }
+
+    const quitar = () => {
+      let num = document.getElementById("pantalla");
+      let list = num.value.split(",");
+      comprobar = list;
+      validar(comprobar, "CSV");
+      if (mensajeError !== "Error") {
+        list.pop();
+      num.value = list;
+      } else {
+        num.value = mensajeError;
+        mensajeError = "";
+      }
+    
+      
+    }
+
+    const validar = (comprobar, tipo) => {
+      if (tipo === "noCSV") {
+        comprobar = parseInt(comprobar);
+        if (typeof comprobar !== 'number' || isNaN(comprobar)) {
+          mensajeError = "Error";
+        }
+      } else {
+        for (let i = 0; i < comprobar.length; ++i){
+          let numeroArray = parseInt(comprobar[i]);
+          if ( isNaN(numeroArray) || typeof numeroArray !== 'number'){
+            mensajeError = "Error";
+            break;
+          }
+        }
+      }
     }
   </script>
 </head>
+
 <body>
+
   Número:
   <input type="text" id="pantalla" onclick="vaciar()">
+  <h2 id="info" class="grande" title="Info sobre el número">Info sobre el número</h2>
+  <h3>Operaciones unitarias</h3>
   <button id="cuadrado" onclick="cuadrado()">x<sup>2</sup></button>
- </body>
+  <button id="modulo" onclick="mod()">Mod</button>
+  <button id="factorial" onclick="fact()">n!</button>
+  <h3>Operaciones binarias</h3>
+  <button id="multiplicacion" onclick="mul()">*</button>
+  <button id="suma" onclick="add()">+</button>
+  <button id="igual" onclick="eq()">=</button>
+  <h3>Operaciones en formato CSV</h3>
+  <button id="sumatorio" onclick="sumatorio()">Σx</button>
+  <button id="ordenar" onclick="ordenar()">Ordenar</button>
+  <button id="revertir" onclick="revertir()">Revertir</button>
+  <button id="quitar" onclick="quitar()">Quitar</button>
+</body>
+
 </html>
